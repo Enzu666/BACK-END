@@ -80,21 +80,28 @@ entradaDeDados.question("Digite o nome do aluno: ", function(nome){
                         NÃO -> NOT -> !
                     */
 
+                    //validação de entrada vazia    
                     if(nomeAluno == "" || valor1 == "" || valor2 == "" || valor3 == "" || valor4 == ""){
-                        console.log("É obrigatório preencher todos os dados");
-                        
+                        console.log("ERRO: é obrigatório preencher todos os dados!");
                     
-                    }else if(resultado < 0 || resultado >100){
-                        console.log("ERRO");
-                    
-                    }else{
-                      var resultado =  ( Number(valor1) + Number(valor2) + Number(valor3) + Number(valor4) ) /4
-                      console.log("A nota do aluno é: " + resultado);
+                    //validação de entrada de 0 à 100
+                    }else if(valor1 < 0 || valor1 >100 || valor2 < 0 || valor2 >100 || valor3 < 0 || valor3 >100 || valor4 < 0 || valor4 >100){
+                        console.log("ERRO: só números de 0 à 100!");
 
-                    if(resultado < 40){ 
+                    //validação para a entrada de letras nas notas utilizando os isNaN
+                    //isNaN() -> permite validar se o conteúdo da variável possui algum caracter 
+                    // ao invés de um número
+                    }else if(isNaN(valor1) || isNaN(valor2) || isNaN(valor3) || isNaN(valor4)){
+                        console.log('ERRO: digite apenas números!');
+                    }else{
+                      let resultado =  ( Number(valor1) + Number(valor2) + Number(valor3) + Number(valor4) ) /4
+                      console.log("A nota do aluno é: " + resultado.toFixed(2)); //toFixed(2) -> serve para forçar o resultado ser apresentado com 2 números após a casa decimal
+                    
+                    //condição do aluno
+                    if(resultado < 50){ 
                         console.log("REPROVADO")  
                         
-                    }else if(resultado >= 50){
+                    }else if(resultado >= 70){
                         console.log("APROVADO"); 
 
                     }else{
@@ -111,3 +118,11 @@ entradaDeDados.question("Digite o nome do aluno: ", function(nome){
 
     });
 });
+
+//Conversões de tipos de dados!!!
+//typeof()-> permite verificar o tipo de dados de uma variável.
+//parseInt()-> permite converter um número para inteiro.
+//parseFloat()-> permite converter uma string para um número decimal
+//Number()-> permite converter uma string para número (inteiro ou decimal.)
+//String()-> permite converter o conteúdo para String
+//Boolean()-> permite converter o conteúdo para booleano
