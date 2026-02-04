@@ -93,20 +93,23 @@ entradaDeDados.question("Digite o nome do aluno: ", function(nome){
                     // ao invés de um número
                     }else if(isNaN(valor1) || isNaN(valor2) || isNaN(valor3) || isNaN(valor4)){
                         console.log('ERRO: digite apenas números!');
-                    }else{
-                      let resultado =  ( Number(valor1) + Number(valor2) + Number(valor3) + Number(valor4) ) /4
-                      console.log("A nota do aluno é: " + resultado.toFixed(2)); //toFixed(2) -> serve para forçar o resultado ser apresentado com 2 números após a casa decimal
-                    
-                    //condição do aluno
-                    if(resultado < 50){ 
-                        console.log("REPROVADO")  
-                        
-                    }else if(resultado >= 70){
-                        console.log("APROVADO"); 
 
                     }else{
-                        console.log("RECUPERAÇÃO")
-                    }
+                        let statusAluno
+                        let resultado =  ( Number(valor1) + Number(valor2) + Number(valor3) + Number(valor4) ) /4
+                        
+                        //condição do aluno
+                        if(resultado < 50){ 
+                            statusAluno = ("REPROVADO"); 
+                        
+                        }else if(resultado >= 70){
+                            statusAluno = ("APROVADO"); 
+
+                        }else{
+                            statusAluno = ("RECUPERAÇÃO");
+                        }
+
+                        console.log("Aluno(a): " +  nomeAluno + " \nMédia: " + resultado.toFixed(2) +  " \nStatus: " + statusAluno); //toFixed(2) -> serve para forçar o resultado ser apresentado com 2 números após a casa decimal
                     }
                 
                 
