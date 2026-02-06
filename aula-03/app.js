@@ -52,34 +52,115 @@ Essa nova funcionalidade poderá dar muito mais conforto e
 autonomia a quem for utilizar a aplicação.
 */
 
-const readline = require ("readline");
+const readline = require("readline");
 
 const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-entradaDeDados.question("Digite o seu nome: ", function(nomeUsuario){
-    let nome = nomeUsuario;
+//recebe o nome do usuário e protege contra números ou espaço vazio
+entradaNomeUsuario()
+function entradaNomeUsuario(){
+    entradaDeDados.question("Digite o seu nome: ", function(nomeUsuarioDigitado){
+        let nomeUsuario = nomeUsuarioDigitado
+        if(nomeUsuario == ""){
+            console.log("Não é possível prosseguir sem o nome.");
+            entradaNomeUsuario()
+        }else if(!isNaN(nomeUsuario)){
+            console.log("Não é possível atribuir números ao nome.")
+            entradaNomeUsuario()
+        }
+        //recebe o nome do produto e protege contra espaço vazio
+        entradaNomeProduto()
+        function entradaNomeProduto(){
+            entradaDeDados.question("Qual o nome do produto que será comprado? ", function(nomeProduto){
 
-    entradaDeDados.question("Qual o nome do produto que será comprado? ", function(nomeProdutoDigitado){
-        let nomeProduto = nomeProdutoDigitado;
+                if(nomeProduto == ""){
+                    console.log("Não é possível prosseguir sem o nome do produto.");
+                    entradaNomeProduto()
+                }
+                //recebe o valor do produto e protege contra letras ou espaço vazio
+                entradaValorProduto()
+                function entradaValorProduto(){
+                    entradaDeDados.question("Digite o valor deste produto: ", function(valorProdutoDigitado){
+                        let valorProduto = Number(valorProdutoDigitado);
 
-        entradaDeDados.question("Digite o valor deste produto: ", function(valorProdutoDigitado){
-            let valorProduto = valorProdutoDigitado;
+                        if(valorProduto == ""){
+                            console.log("Não é possível prosseguir sem o valor do produto.");
+                            entradaValorProduto()
+                        }else if(isNaN(valorProduto)){
+                            console.log("Não é possível atribuir letras ao valor.")
+                            entradaValorProduto()
+                        }
+                        //recebe taxa de juros e protege contra letras ou espaço vazio
+                        entradaTaxaDeJuros()
+                        function entradaTaxaDeJuros(){
+                            entradaDeDados.question("Digite a taxa de juros : ", function(taxaDeJurosDigitado){
+                                let taxaDeJuros = Number(taxaDeJurosDigitado);
 
-            entradaDeDados.question("Digite a taxa de juros: ", function(taxaDeJurosDigitado){
-                let taxaDeJuros = taxaDeJurosDigitado;
+                                if (taxaDeJuros > 1) {
+                                    taxaDeJuros = taxaDeJuros / 100;
 
-                entradaDeDados.question("você deseja digitar o tempo de pagamentos em meses ou anos? meses = M anos = A ", function(escolhaDeTempoDigitado){
-                    let escolhaDeTempo = escolhaDeTempoDigitado
+                                }else if(taxaDeJuros == ""){
+                                    console.log("Não é possível prosseguir sem o valor de juros.");
+                                    entradaTaxaDeJuros()
 
-                    entradaDeDados.question("Qual será o tempo de pagamento? ", function(tempodePagamentoDigitado){
-                        let tempodePagamento = tempodePagamentoDigitado
+                                }else if(isNaN(taxaDeJuros)){
+                                    console.log("Não é possível atribuir letras ao valor do juros.")
+                                    entradaTaxaDeJuros()
+                                }
+                                //recebe tempo de pagamento e protege contra números, espaço vazio ou outras letras que não seja m ou a
+                                entradaEscolhaTempo()
+                                function entradaEscolhaTempo(){
+                                    entradaDeDados.question("Você deseja digitar o tempo de pagamento em meses ou anos? (M/A): ", function(escolhaDeTempoDigitado){
+                                        escolhaDeTempo = escolhaDeTempoDigitado
+                                        if(escolhaDeTempo !== "a" && escolhaDeTempo !== "A" && escolhaDeTempo !== "M" && escolhaDeTempo !== "m"){
+                                            console.log("Digite apenas uma das opções acima.")
+                                            entradaEscolhaTempo()
+                                        }
+                                        //recebe o nome do usuário e protege contra letras ou espaço vazio, e faz o cálculo de juros composto
+                                        entradaTempoPagamento()
+                                        function entradaTempoPagamento(){
+                                            entradaDeDados.question("Qual será o tempo de pagamento? ", function(tempodePagamentoDigitado){
+                                                let tempodePagamento = Number(tempodePagamentoDigitado);
+
+                                                console.log(tempodePagamento)
+                                                
+                                                if(tempodePagamento == ""){
+                                                    console.log("Não é possível prosseguir sem o tempo de pagamento.");
+                                                    entradaTempoPagamento()
+                
+                                                }else if(isNaN(tempodePagamento)){
+                                                    console.log("Não é possível atribuir letras ao tempo de pagamento.")
+                                                    entradaTempoPagamento()
+                                                }
+
+                                                if(escolhaDeTempo === "A" || escolhaDeTempo === "a"){
+                                                    tempodePagamento = tempodePagamento * 12;
+                                                }
+                                                
+                                                let montante = valorProduto * Math.pow((1 + taxaDeJuros), tempodePagamento);
+                                                let valorParcela = montante / tempodePagamento;
+
+                                                console.log("******************* [Viva Moda] *******************");
+                                                console.log("Muito obrigado por realizar a sua compra conosco Sr(a) " + nomeUsuario);
+                                                console.log("A compra do produto " + nomeProduto + " tem um valor de: R$ " + valorProduto.toFixed(2));
+                                                console.log("A sua compra será parcelada em " + tempodePagamento + " vezes de R$ " + valorParcela.toFixed(2));
+                                                console.log("Montante total a pagar: R$ " + montante.toFixed(2));
+                                                console.log("Total de juros: R$ " + (montante - valorProduto).toFixed(2));
+                                                console.log("*******************************************************");
+                                                
+                                                entradaDeDados.close();
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     });
-
-                });
+                }
             });
-        });
+        }
     });
-});
+}
