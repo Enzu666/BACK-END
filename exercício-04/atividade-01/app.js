@@ -4,22 +4,30 @@
  * Autor: Enzo
  * Versão: 1.0.2.26
 *******************************************************************/
-
 const readline = require("readline")
-const { calculoDeImc } = require("../modulo/calcular.js")
+let imc = require("../modulo/calcular.js")
 
 const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
 
-entradaDeDados.question("digite o seu peso (kg): ", function(peso){
-    let peso1 = Number(peso)
-    entradaDeDados.question("digite sua altura (m): ", function(altura){
-        let altura1 = Number(altura)
+entradaDeDados.question("Nome: ", function(nome) {
+    entradaDeDados.question("Peso (kg): ", function(rPeso) {
+        entradaDeDados.question("Altura (m): ", function(rAltura) {
 
-        let calculos = require("../modulo/calcular.js")
-        let resultado = calculos.calculoDeImc(peso1, altura1)
-        console.log(resultado)
+            const peso   = Number(rPeso.replace(",", "."))
+            const altura = Number(rAltura.replace(",", "."))
+
+            const erro = imc.validarEntradas(nome, rPeso, rAltura, peso, altura)
+
+            if (erro) {
+                console.log(`\nErro: ${erro}`)
+            } else {
+                imc.exibirResultado(nome, peso, altura)
+            }
+
+            entradaDeDados.close()
+        })
     })
 })

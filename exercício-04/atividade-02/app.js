@@ -5,37 +5,55 @@
  * Versão: 1.0.2.26
 *******************************************************************/
 const readline = require("readline")
+let calculos = require("../modulo/calcular.js")
 
 const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
 
-entradaDeDados.question("digite a nota1: ", function(resultado1){
-    let nota1 = Number(resultado1)
-    entradaDeDados.question("digite a nota2: ", function(resultado2){
-        let nota2 = Number(resultado2)
-        entradaDeDados.question("digite a nota3: ", function(resultado3){
-            let nota3 = Number(resultado3)
-            entradaDeDados.question("digite a nota4: ", function(resultado4){
-                let nota4 = Number(resultado4)
-                
-                let calculos = require("../modulo/calcular.js")
-                let resultado = calculos.calculoDeMedia(nota1, nota2, nota3, nota4)
-                console.log(resultado)
-                    
-                if(resultado >= 50 && resultado <= 69){
-                    entradaDeDados.question("digite a nota5: ", function(resultado5){
-                        let nota5 = Number(resultado5)
-                        let resultado1 = calculos.calculoDeMediaDois(resultado, nota5)
-                        console.log(resultado1)
-                    })
-                    
-                }else{
-                    console.log("fim")
-                }
+entradaDeDados.question("Nome do aluno: ", function(nomeAluno) {
+    entradaDeDados.question("Sexo do aluno (M/F): ", function(sexoAluno) {
+        entradaDeDados.question("Nome do professor: ", function(nomeProf) {
+            entradaDeDados.question("Sexo do professor (M/F): ", function(sexoProf) {
+                entradaDeDados.question("Nome do curso: ", function(nomeCurso) {
+                    entradaDeDados.question("Nome da disciplina: ", function(nomeDisc) {
 
-             
+                        console.log("\n--- Notas (0 a 100) ---")
+                        entradaDeDados.question("Nota 1: ", function(nota1) {
+                            entradaDeDados.question("Nota 2: ", function(nota2) {
+                                entradaDeDados.question("Nota 3: ", function(nota3) {
+                                    entradaDeDados.question("Nota 4: ", function(nota4) {
+
+                                        const n1 = Number(nota1)
+                                        const n2 = Number(nota2)
+                                        const n3 = Number(nota3)
+                                        const n4 = Number(nota4)
+                                        const media = calculos.calcularMedia(n1, n2, n3, n4)
+                                        const statusParcial = calculos.definirStatus(media)
+
+                                        if (statusParcial === "exame") {
+                                            console.log(`\nMédia ${media.toFixed(2)} — ${calculos.getTitulo(nomeAluno, sexoAluno, "aluno")} está de exame.`)
+                                            entradaDeDados.question("Digite a nota do exame: ", function(rExame) {
+                                                const notaExame = Number(rExame)
+                                                const mediaExame = calculos.calcularMediaExame(media, notaExame)
+                                                const status = calculos.definirStatusExame(mediaExame)
+
+                                                calculos.exibirRelatorio({ nomeAluno, sexoAluno, nomeProf, sexoProf, nomeCurso, nomeDisc, n1, n2, n3, n4, notaExame, media, mediaExame, status })
+                                                entradaDeDados.close()
+                                            })
+                                        } else {
+                                            calculos.exibirRelatorio({ nomeAluno, sexoAluno, nomeProf, sexoProf, nomeCurso, nomeDisc, n1, n2, n3, n4, notaExame: null, media, mediaExame: null, status: statusParcial })
+                                            entradaDeDados.close()
+                                        }
+
+                                    })
+                                })
+                            })
+                        })
+
+                    })
+                })
             })
         })
     })
