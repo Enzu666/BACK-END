@@ -11,20 +11,23 @@ const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
+console.log("\n****************************************")
+console.log("         SISTEMA DE CÁLCULO DE IMC")
+console.log("****************************************\n")
 
 entradaDeDados.question("Nome: ", function(nome) {
-    entradaDeDados.question("Peso (kg): ", function(rPeso) {
-        entradaDeDados.question("Altura (m): ", function(rAltura) {
+    entradaDeDados.question("Peso (kg): ", function(peso1) {
+        entradaDeDados.question("Altura (m): ", function(altura1) {
 
-            const peso   = Number(rPeso.replace(",", "."))
-            const altura = Number(rAltura.replace(",", "."))
+            const peso   = Number(peso1.replace(",", "."))
+            const altura = Number(altura1.replace(",", "."))
 
-            const erro = imc.validarEntradas(nome, rPeso, rAltura, peso, altura)
+            const erro = imc.validarEntradasImc(nome, peso1, altura1)
 
             if (erro) {
-                console.log(`\nErro: ${erro}`)
+                console.log(`Erro: ${erro}`)
             } else {
-                imc.exibirResultado(nome, peso, altura)
+                imc.exibirResultadoImc(nome, peso, altura)
             }
 
             entradaDeDados.close()

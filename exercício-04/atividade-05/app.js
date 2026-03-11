@@ -11,19 +11,22 @@ const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
+console.log("\n****************************************")
+console.log("   GERENCIADOR DE NÚMEROS PARES E ÍMPARES")
+console.log("****************************************\n")
 
-entradaDeDados.question("Número inicial (0 a 500): ", function(rInicial) {
-    entradaDeDados.question("Número final (100 a 1000): ", function(rFinal) {
+entradaDeDados.question("Número inicial (0 a 500): ", function(numeroInicial) {
+    entradaDeDados.question("Número final (100 a 1000): ", function(numeroFinal) {
 
-        const numInicial = Number(rInicial)
-        const numFinal   = Number(rFinal)
+        const inicial = Number(numeroInicial)
+        const final   = Number(numeroFinal)
 
-        const erro = numeros.validarEntradas(rInicial, rFinal, numInicial, numFinal)
+        const erro = numeros.validarEntradasParEImpar(numeroInicial, numeroFinal, inicial, final)
 
         if (erro) {
-            console.log(`\nErro: ${erro}`)
+            console.log(`Erro: ${erro}`)
         } else {
-            numeros.exibirResultado(numInicial, numFinal)
+            numeros.exibirResultado(inicial, final)
         }
 
         entradaDeDados.close()

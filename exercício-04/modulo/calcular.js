@@ -5,6 +5,20 @@
  * Versão: 1.0.2.26
 *******************************************************************/ 
 
+function validarEntradasImc(nome, rawPeso, rawAltura, peso, altura) {
+    if (nome.trim() === "")
+        return "O nome não pode ficar vazio."
+    if (rawPeso.trim() === "" || rawAltura.trim() === "")
+        return "Nenhum campo pode ficar vazio."
+    if (isNaN(peso) || isNaN(altura))
+        return "Digite apenas valores numéricos válidos."
+    if (peso <= 0)
+        return "O peso deve ser maior que zero."
+    if (altura <= 0 || altura > 3)
+        return "A altura deve ser um valor válido em metros (ex: 1.75)."
+    return null
+}
+
 function calcularImc(peso, altura) {
     return peso / (altura * altura)
 }
@@ -18,19 +32,19 @@ function classificarImc(imc) {
     return "Obesidade grau 3"
 }
 
-function exibirResultado(nome, peso, altura) {
+function exibirResultadoImc(nome, peso, altura) {
     const resultado      = calcularImc(peso, altura)
     const classificacao  = classificarImc(resultado)
 
-    console.log("\n═══════════════════════════════════════")
+    console.log("\n****************************************")
     console.log("            RESULTADO DO IMC")
-    console.log("═══════════════════════════════════════")
+    console.log("****************************************")
     console.log(`Nome:           ${nome}`)
     console.log(`Peso:           ${peso} kg`)
     console.log(`Altura:         ${altura} m`)
     console.log(`IMC:            ${resultado.toFixed(2)}`)
     console.log(`Classificação:  ${classificacao}`)
-    console.log("═══════════════════════════════════════\n")
+    console.log("****************************************\n")
 }
 
 function calcularMedia(n1, n2, n3, n4) {
@@ -63,9 +77,9 @@ function exibirRelatorio(dados) {
     const notasStr = `${dados.n1}, ${dados.n2}, ${dados.n3}, ${dados.n4}` +
         (dados.notaExame !== null ? `, Nota do Exame: ${dados.notaExame}` : "")
 
-    console.log("\n═══════════════════════════════════════")
+    console.log("\n****************************************")
     console.log("         RELATÓRIO DO ALUNO")
-    console.log("═══════════════════════════════════════")
+    console.log("****************************************")
     console.log(`\nO ${titAluno} foi [${dados.status}] na disciplina [${dados.nomeDisc}].`)
     console.log(`Curso: ${dados.nomeCurso}`)
     console.log(`${titProf.charAt(0).toUpperCase() + titProf.slice(1)}`)
@@ -74,10 +88,10 @@ function exibirRelatorio(dados) {
     if (dados.mediaExame !== null) {
         console.log(`Média Final do Exame: ${dados.mediaExame.toFixed(2)}`)
     }
-    console.log("═══════════════════════════════════════\n")
+    console.log("****************************************\n")
 }
 
-function validarEntradas(tabInicial, tabFinal, contInicial, contFinal) {
+function validarEntradasTab(tabInicial, tabFinal, contInicial, contFinal) {
     if (!tabInicial || !tabFinal || !contInicial || !contFinal)
         return "Nenhum campo pode ficar sem preenchimento."
     if (tabInicial < 2 || tabInicial > 100 || tabFinal < 2 || tabFinal > 100)
@@ -102,7 +116,7 @@ function exibirTabuada(tabInicial, tabFinal, contInicial, contFinal) {
     }
 }
 
-function validarEntrada(raw, numero) {
+function validarEntradaFatorial(raw, numero) {
     if (raw.trim() === "")
         return "O campo não pode ficar vazio."
     if (isNaN(numero) || !Number.isInteger(numero))
@@ -136,12 +150,12 @@ function exibirFatorial(numero) {
     const resultado  = calcularFatorial(numero)
     const expressao  = montarExpressao(numero)
 
-    console.log("\n═══════════════════════════════════════")
+    console.log("\n****************************************")
     console.log(`Fatorial de ${numero} é ${expressao} = ${resultado}`)
-    console.log("═══════════════════════════════════════\n")
+    console.log("****************************************\n")
 }
 
-function validarEntradas(rawInicial, rawFinal, numInicial, numFinal) {
+function validarEntradasParEImpar(rawInicial, rawFinal, numInicial, numFinal) {
     if (rawInicial.trim() === "" || rawFinal.trim() === "")
         return "Nenhum campo pode ficar vazio."
     if (isNaN(numInicial) || isNaN(numFinal))
@@ -177,51 +191,38 @@ function exibirResultado(numInicial, numFinal) {
     const pares   = separarPares(numInicial, numFinal)
     const impares = separarImpares(numInicial, numFinal)
 
-    console.log("\n═══════════════════════════════════════")
+    console.log("\n****************************************")
     console.log("Lista de números Pares")
-    console.log("═══════════════════════════════════════")
+    console.log("****************************************")
     pares.forEach(n => console.log(n))
-    console.log(`Qtde de números encontrados: ${pares.length}`)
+    console.log(`Quantidade de números encontrados: ${pares.length}`)
 
-    console.log("\n═══════════════════════════════════════")
+    console.log("\n****************************************")
     console.log("Lista de números Ímpares")
-    console.log("═══════════════════════════════════════")
+    console.log("****************************************")
     impares.forEach(n => console.log(n))
-    console.log(`Qtde de números encontrados: ${impares.length}`)
-    console.log("═══════════════════════════════════════\n")
+    console.log(`Quantidade de números encontrados: ${impares.length}`)
+    console.log("****************************************\n")
 }
-
-function validarEntradas(nome, rawPeso, rawAltura, peso, altura) {
-    if (nome.trim() === "")
-        return "O nome não pode ficar vazio."
-    if (rawPeso.trim() === "" || rawAltura.trim() === "")
-        return "Nenhum campo pode ficar vazio."
-    if (isNaN(peso) || isNaN(altura))
-        return "Digite apenas valores numéricos válidos."
-    if (peso <= 0)
-        return "O peso deve ser maior que zero."
-    if (altura <= 0 || altura > 3)
-        return "A altura deve ser um valor válido em metros (ex: 1.75)."
-    return null
-}
-
 module.exports ={
-    calculoDeImc,
+    validarEntradasImc,
+    calcularImc,
+    classificarImc,
+    exibirResultadoImc,
     calcularMedia,
     calcularMediaExame,
     definirStatus,
     definirStatusExame,
     getTitulo,
     exibirRelatorio,
-    validarEntradas,
+    validarEntradasTab,
     exibirTabuada,
-    validarEntrada,
+    validarEntradaFatorial,
     calcularFatorial,
     montarExpressao,
     exibirFatorial,
-    validarEntradas,
+    validarEntradasParEImpar,
     separarPares,
     separarImpares,
-    exibirResultado,
-    validarEntradas
+    exibirResultado
 }

@@ -11,6 +11,9 @@ const entradaDeDados = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
+console.log("\n****************************************")
+console.log("   SISTEMA DE MÉDIAS ESCOLARES")
+console.log("*****************************************\n")
 
 entradaDeDados.question("Nome do aluno: ", function(nomeAluno) {
     entradaDeDados.question("Sexo do aluno (M/F): ", function(sexoAluno) {
@@ -34,8 +37,8 @@ entradaDeDados.question("Nome do aluno: ", function(nomeAluno) {
 
                                         if (statusParcial === "exame") {
                                             console.log(`\nMédia ${media.toFixed(2)} — ${calculos.getTitulo(nomeAluno, sexoAluno, "aluno")} está de exame.`)
-                                            entradaDeDados.question("Digite a nota do exame: ", function(rExame) {
-                                                const notaExame = Number(rExame)
+                                            entradaDeDados.question("Digite a nota do exame: ", function(exame) {
+                                                const notaExame = Number(exame)
                                                 const mediaExame = calculos.calcularMediaExame(media, notaExame)
                                                 const status = calculos.definirStatusExame(mediaExame)
 

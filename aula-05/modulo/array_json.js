@@ -32,7 +32,7 @@
 */
 
 //Formas de criar um ARRAY
-const listaDeNomes = ['José', 'Maria', 'João', 'André', 'Alex']
+const listaDeNomes = ['José', 'Maria', 'João', 'André', 'Alex', 'Carlos', 'Ana', 'Bruna', 'Diego', 'José', 'José da Silva']
 const listaDeCliente = []
 const listaDeFornecedores = []
 
@@ -68,7 +68,7 @@ const exibirDados = function(){
         console.log(`O nome do cliente é: ${listaDeNomes[contador]}`)
     }
 
-    //Retorna o conteúdo de cada elemento através de um CAL BACK
+    //Retorna o conteúdo de cada elemento através de um CAL BACK (uma das mais utilizadas)
     console.log()
     console.log("FOR EACH")
     listaDeNomes.forEach(function(cliente){
@@ -100,13 +100,80 @@ const manipularDados = function(){
 
     console.log(listaDeCliente)
 
-    // push permite adicionar novos valores no ARRAY sempre no final da lista
+    //o push permite adicionar novos elementos no ARRAY sempre ao final da lista
     listaDeFornecedores.push('Luiz da Silva')
     listaDeFornecedores.push('Zezinho da Silva')
     listaDeFornecedores.push('Huguinho da Silva')
     listaDeFornecedores.push('Luizinho da Silva', 'André da Silva', 'Carlos da Silva')
-    console.log(listaDeFornecedores)
+    console.table(listaDeFornecedores)
+
+    //o unshift permite adicionar novos elementos sempre ao inicio da lista
+    listaDeFornecedores.unshift('Ana Carolina')
+    console.table(listaDeFornecedores)
+
+    //remover elementos do ARRAY
+    //o pop permite remover o ÚLTIMO elemento da lista
+    listaDeFornecedores.pop()
+    console.table(listaDeFornecedores)
+
+    //o shift permite remover o PRIMEIRO elemento da lista
+    listaDeFornecedores.shift()
+    console.table(listaDeFornecedores)
+
+    //o splice permite ir até um índice e remover a quantidade de conteúdos que você passou
+    //                  splice(índice,quantidade)
+    listaDeFornecedores.splice(2,1)
+    console.table(listaDeFornecedores)
+
 }
 
+const removerItem = function(nome){
+
+    //o indexOf retorna o índice de um elemento fazendo a busca pelo valor '(nome)'
+    // se o indexOF não encontrar o conteúdo ele devolve -1
+    let indice = listaDeNomes.indexOf(nome)
+    if(indice != -1){
+        listaDeNomes.splice(indice, 1)
+        return true
+    }else{
+        return false
+    }
+    
+
+    // listaDeNomes.splice(indice,1)
+
+    //for(indice in listaDeNomes){
+        //if(listaDeNomes[indice] == nome){
+            //listaDeNomes.splice(indice,1)
+        //}
+    //}
+}
+
+const verificarItem = function(nome){
+    //pode usar o indexOf ou o forin
+
+    //include verifica a existencia de um conteúdo dentro de uma lista (true/false)
+    return listaDeNomes.includes(nome)
+}
+
+const quantidadeDeItem = function(nome){
+    let cont = 0
+    listaDeNomes.forEach(function(item){
+        if(String(item).toUpperCase() == String(nome).toUpperCase())
+            cont +=1
+    })
+    return cont
+}
 //exibirDados()
-manipularDados()
+//manipularDados()
+// let resposta = removerItem('klaehksjdghskjdgh')
+// if(resposta){
+//     console.log('Item removido com sucesso!')
+// }else{
+//     console.log('Item não encontrado')
+// }
+// console.table(listaDeNomes)
+
+//verificarItem('José')
+
+console.log(quantidadeDeItem('José'))
