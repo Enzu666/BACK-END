@@ -1,5 +1,5 @@
 /*****************************************************************************************
- * Objetivo: MAnipular dados utilizando Array e JSON para o exercício bem legal kkkkk
+ * Objetivo: Manipular dados utilizando Array e JSON para o exercício bem legal kkkkk
  * Data: 18/03/2026
  * Autor: Enzo
  * Versão: 1.0
@@ -22,9 +22,9 @@ function getListaDeEstados(){
     return uf
 }
 
-function getDadosEstado(){
+function getDadosEstado(uf){
 
-    let uf = 'sp'
+    let estado = false
 
     json.listaDeEstados.estados.forEach(function(descricao){
         if(String(descricao.sigla).toUpperCase() == String(uf).toUpperCase()){
@@ -39,9 +39,9 @@ function getDadosEstado(){
     return estado
 }
 
-function getCapitalEstado(){
-    let sigla = 'ac'
+function getCapitalEstado(sigla){
 
+    let estado = false
     json.listaDeEstados.estados.forEach(function(informacao){
         if(String(informacao.sigla).toUpperCase() == String(sigla).toUpperCase()){
             estado = {
@@ -53,12 +53,13 @@ function getCapitalEstado(){
 
 }
 
-function getEstadosRegiao(){
+function getEstadosRegiao(regiao){
+    
     let estado = {
         "regiao": '',
         "estados": []
     }
-    let regiao = 'sul'
+    
     json.listaDeEstados.estados.forEach(function(regiaoEstados){
         if(String(regiaoEstados.regiao).toUpperCase() == String(regiao).toUpperCase()){
             estado.regiao = regiaoEstados.regiao
@@ -96,8 +97,8 @@ function getCapitalPais(){
     return estados
 }
 
-function getCidades(){
-    let uf = 'ac'
+function getCidades(uf){
+    
     let cidadesEstado = false
     let cidades = []
     json.listaDeEstados.estados.forEach(function(pesquisaCidade){
@@ -117,9 +118,18 @@ function getCidades(){
     return cidadesEstado
 }
 
-console.log(getListaDeEstados())
-console.log(getDadosEstado())
-console.log(getCapitalEstado())
-console.log(getEstadosRegiao())
-console.log(getCapitalPais())
-console.log(getCidades())
+// console.log(getListaDeEstados())
+// console.log(getDadosEstado())
+// console.log(getCapitalEstado())
+// console.log(getEstadosRegiao())
+// console.log(getCapitalPais())
+// console.log(getCidades())
+
+module.exports = {
+    getListaDeEstados,
+    getDadosEstado,
+    getCapitalEstado,
+    getEstadosRegiao,
+    getCapitalPais,
+    getCidades
+}
