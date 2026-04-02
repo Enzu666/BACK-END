@@ -59,16 +59,22 @@ function getEstadosRegiao(regiao){
         "regiao": '',
         "estados": []
     }
-    
+    let status = false
+
     json.listaDeEstados.estados.forEach(function(regiaoEstados){
         if(String(regiaoEstados.regiao).toUpperCase() == String(regiao).toUpperCase()){
             estado.regiao = regiaoEstados.regiao
+            status = true
             estado.estados.push(
                 {"uf": regiaoEstados.nome, "descricao": regiaoEstados.nome}
             )
         }
 
+
     })
+    if (!status){
+        return status
+    }
     return estado
 }
 

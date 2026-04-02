@@ -48,9 +48,11 @@ app.get('/v1/senai/estados', function(request, response){
 app.get('/v1/senai/dados/estado/:uf', function(request, response){
     let sigla = request.params.uf
     let dadosEstados = estadosCidades.getDadosEstado(sigla)
-    response.json(dadosEstados)
-    response.status('200')
-    if(!dadosEstados){
+    
+    if(dadosEstados){
+        response.json(dadosEstados)
+        response.status(200)
+    }else{
         response.json({"message": "erro na url"})
         response.status(404)
     }
@@ -59,9 +61,11 @@ app.get('/v1/senai/dados/estado/:uf', function(request, response){
 app.get('/v1/senai/capital/estados/:uf', function(request, response){
     let sigla = request.params.uf
     let capital = estadosCidades.getCapitalEstado(sigla)
-    response.json(capital)
-    response.status('200')
-    if(!capital){
+    
+    if(capital){
+        response.json(capital)
+        response.status('200')
+    }else{
         response.json({"message": "erro na url"})
         response.status(404)
     }
@@ -70,8 +74,14 @@ app.get('/v1/senai/capital/estados/:uf', function(request, response){
 app.get('/v1/senai/regiao/estados/:regiao', function(request, response){
     let regiao = request.params.regiao
     let regioes = estadosCidades.getEstadosRegiao(regiao)
-    response.json(regioes)
-    response.status('200')
+    
+    if(regioes){
+        response.json(regioes)
+        response.status('200')
+    }else{
+        response.json({"message": "erro na url"})
+        response.status(404)
+    }
     
 })
 
@@ -86,8 +96,13 @@ app.get('/v1/senai/cidades/:uf', function(request, response){
     let sigla = request.params.uf
     let cidades = estadosCidades.getCidades(sigla)
 
-    response.json(cidades)
-    response.status(200)
+    if(cidades){
+        response.json(cidades)
+        response.status(200)
+    }else{
+        response.json({"message": "erro na url"})
+        response.status(404)
+    }
 })
 
 app.listen(8080, function(){
