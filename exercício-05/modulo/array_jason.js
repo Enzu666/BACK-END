@@ -124,13 +124,6 @@ function getCidades(uf){
     return cidadesEstado
 }
 
-// console.log(getListaDeEstados())
-// console.log(getDadosEstado())
-// console.log(getCapitalEstado())
-// console.log(getEstadosRegiao())
-// console.log(getCapitalPais())
-// console.log(getCidades())
-
 module.exports = {
     getListaDeEstados,
     getDadosEstado,

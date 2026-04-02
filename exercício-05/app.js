@@ -105,6 +105,48 @@ app.get('/v1/senai/cidades/:uf', function(request, response){
     }
 })
 
+app.get('/v1/senai/help', function(request, response){
+    let docAPI = {
+        "API-descripition": "API para manipular dados de Estados e Cidades",
+        "Date": "2026-04-02",
+        "Development": "Enzo",
+        "Version": "1.0",
+        "Endpoints": [
+            {   "id": 1,
+                "Rota 1": "/v1/senai/estados",
+                "obs": "retorna a lista de todos os estados"
+            },
+            {
+                "id": 2,
+                "Rota 2": "/v1/senai/dados/estado/sp",
+                "obs": "retorna os dados do estado, filtrando pela sigla do estado"
+            },
+            {
+                "id": 3,
+                "Rota 3": "/v1/senai/capital/estados/rj",
+                "obs": "retorna a capital do estado, filtrando pela sigla do estado"
+            },
+            {
+                "id": 4,
+                "Rota 4": "/v1/senai/regiao/estados/sul",
+                "obs": "retorna os estados, filtrando pela região"
+            },
+            {
+                "id": 5,
+                "Rota 5": "/v1/senai/capitais/brasil",
+                "obs": "retorna os estados que já foram capitais do Brasil"
+            },
+            {
+                "id": 6,
+                "Rota 6": "/v1/senai/cidades/am",
+                "obs": "retorna as cidades, filtrado pelo estado"
+            }
+        ]
+    }
+    response.status(200)
+    response.json(docAPI)
+})
+
 app.listen(8080, function(){
     console.log('API funcionando')
 })
