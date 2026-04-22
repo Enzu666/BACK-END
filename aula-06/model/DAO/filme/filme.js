@@ -13,35 +13,41 @@ const knexConfig = require('../../database_config_knex/knexFile')
 
 //Criar a conexão com o BD MySQL
 const knexConex = knex(knexConfig.development)
+ //Função par inserir dados na tabela de filmes 
+ const insertFilme = async function(filme){
+    try {
+            let sql = `insert into tbl_filme(
+                            nome, 
+                            data_lancamento, 
+                            duracao, 
+                            sinopse, 
+                            avaliacao, 
+                            valor, 
+                            capa
+                            )
+                    values (
+                            '${filme.nome}', 
+                            '${filme.data_lancamento}', 
+                            '${filme.duracao}', 
+                            '${filme.sinopse}', 
+                            if('${filme.avaliacao}' = '', null, '${filme.avaliacao}'), 
+                            '${filme.valor}', 
+                            '${filme.capa}'
+                            );`
+            //console.log(sql)
+            //Executar o ScriptSQL no banco de dados
+            let result = await knexConex.raw(sql)
 
-//Função par inserir dados na tabela de filmes 
-const insertFilme = async function(filme){
-    let sql = `insert into tbl_filme(
-						nome, 
-						data_lancamento, 
-                        duracao, 
-                        sinopse, 
-                        avaliacao, 
-                        valor, 
-                        capa
-                        )
-                values (
-                        '${filme.nome}', 
-                        '${filme.data_lancamento}', 
-                        '${filme.duracao}', 
-                        '${filme.sinopse}', 
-                        '${filme.avaliacao}', 
-                        '${filme.valor}', 
-                        '${filme.capa}'
-                        );`
+            if(result)
+                return true
+            else
+                return false
+            
 
-    //Executar o ScriptSQL no banco de dados
-    let result = await knexConex.raw(sql)
-
-    if(result)
-        return true
-    else
+    } catch (error) {
+        console.log(error)
         return false
+    }
 }
 
 //Função para atualizar um filme existente na tabela
