@@ -45,29 +45,87 @@ const knexConex = knex(knexConfig.development)
             
 
     } catch (error) {
-        console.log(error)
         return false
     }
 }
 
 //Função para atualizar um filme existente na tabela
 const updateFilme = async function(filme){
+    try {
+        //script para atualizar os dados no BD
+        let sql =      `update tbl_filme set
+                                nome            = '${filme.nome}',
+                                data_lancamento = '${filme.data_lancamento}',
+                                duracao         = '${filme.duracao}',
+                                sinopse         = '${filme.sinopse}',
+                                avaliacao       = if('${filme.avaliacao}' = '', null, '${filme.avaliacao}'),
+                                valor           = '${filme.valor}',
+                                capa            = '${filme.capa}'
+                        where id                = ${filme.id};`
 
+        //executa o script sql no bd
+        let result = await knexConex.raw(sql)
+
+        if(result)
+            return true
+        else
+            return false
+    } catch (error) {
+        return false
+    }
 }
 
 //Função para retornar todos os dados da tabela de filmes  
 const selectAllFilme = async function(){
-
+    try {
+        //script para retornar todos os filmes
+        let sql = `select * from tbl_filme order by id desc`
+        //executa no banco de dados o script sql para retornar os filmes
+        let result = await knexConex.raw(sql)
+        //validação para verificar se o retorno do banco é um array
+        //se o script sql der erro, o banco n devolve um array
+        if(Array.isArray(result)){
+            return result[0]
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 //Função para retornar os dados do filme, filtrando pelo ID
 const selectByIdFilme = async function(id){
+    try {
+        let sql = `select * from tbl_filme where id= ${id}`
 
+        let result = await knexConex.raw(sql)
+
+        if(Array.isArray(result)){
+            return result[0]
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 //Função para excçuir um filme pelo ID
 const deleteFilme = async function(id){
+    try {
+        let sql = `delete from tbl_filme where id = ${id};`
 
+        let result = await knexConex.raw(sql)
+
+        if(result)
+            return true
+        else
+            return false
+
+    } catch (error) {
+        return false
+    }
 }
 
 module.exports = {

@@ -43,6 +43,45 @@ app.post('/v1/senai/locadora/filme', bodyParserJSON, async function(request, res
     response.json(result)
 })
 
+app.get('/v1/senai/locadora/filme', async function(request, response){
+    let result = await controllerFilme.listarFilme()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.get('/v1/senai/locadora/filme/:id', async function(request, response){
+    //recebe o parametro pelo id
+    let id = request.params.id
+
+    let result = await controllerFilme.buscarFilme(id)
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.put('/v1/senai/locadora/filme/:id', bodyParserJSON, async function (request, response){
+    //essa linha recebe o content type da requisição
+    let contentType = request.headers['content-type']
+    //recebe o ID do registro a ser realizado
+    let id = request.params.id
+    //recebe os dados enviados no corpo da requisição
+    let dados = request.body
+
+    //chama a função de atualizar na controller e encaminha os dados, id e content-type
+    //obedecendo a ordem da criação na função da controller
+    let result = await controllerFilme.atualizarFilme(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.delete('/v1/senai/locadora/filme/:id', async function(request, response){
+    let id = request.params.id
+
+    let result = await controllerFilme.excluirFilme(id)
+    response.status(result.status_code)
+    response.json(result)
+})
 //Serve para inicializar a API para receber requisições
 app.listen(8080, function(){
     console.log('API funcionando')

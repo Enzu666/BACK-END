@@ -50,23 +50,152 @@ const inserirNovoFilme = async function(filme, contentType){
 }
 
 //Função para atualizar um Filme
-const atualizarFilme = async function(){
+const atualizarFilme = async function(filme, id, contentType){
+    let message = JSON.parse(JSON.stringify(config_message))
 
+    try {
+
+        //VALIDAÇÃO DO CONTENTTYPE PARA JSON
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+
+            //validação de ID
+            let resultBuscarId =  await buscarFilme(id)
+
+            //se a função buscar encontrar o filme, o atributo status do JSON será verdadeiro
+            //isso signfica que o filme existe na base, caso não retorne true, então
+            //o retorno da função poderá ser um 400 ou 404 ou um 500
+            if(resultBuscarId.status){
+
+                let validar = await validarDados(filme)
+
+                //validação de campos obrigatórios para a atualização (Body)
+                if(!validar){
+
+                    //adciono o id do filme no JSON para ser enviado para o DAO
+                    filme.id = id
+
+                    //chama a função do DAO para atualizar o filme (dados e ID)
+                    let result = await filmeDAO.updateFilme(filme)
+
+                    if(result){
+                        message.DEFAULT_MESSAGE.status = message.SUCESS_UPDATED_ITEM.status
+                        message.DEFAULT_MESSAGE.status_code = message.SUCESS_UPDATED_ITEM.status_code
+                        message.DEFAULT_MESSAGE.message = message.SUCESS_UPDATED_ITEM.message
+
+                        return message.DEFAULT_MESSAGE //200 atualizado
+                    }else{
+                        return message.ERROR_INTERNAL_SERVER_MODEL //500
+                    }
+                }else{
+                    return validar //400
+                }
+            }else{
+                return message.resultBuscarId //400 ou 404 ou 500
+            }
+
+        }else{
+            return message.ERROR_CONTENT_TYPE //415
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER // 500 controller
+    }
 }
 
 //Função para retornar todos os Filmes
 const listarFilme = async function(){
 
+    //criando um clone do objeto JSON para manipular sua estrutura local, sem modificar a estrutura original
+    //realiza uma conversão do json para string e permite clonar a const config_message sem modificar o original
+    let message = JSON.parse(JSON.stringify(config_message))
+
+    try {
+        //chama a função do DAO para retornar a lista de todos os filmes
+        let result = await filmeDAO.selectAllFilme()
+        
+        //Validação para verificar se o DAO conseguiu processar os dados
+        if(result){
+            //Validação para verificar se existe conteúdo no array
+            if(result.length > 0){
+                message.DEFAULT_MESSAGE.status = message.SUCESS_RESPONSE.status
+                message.DEFAULT_MESSAGE.status_code = message.SUCESS_RESPONSE.status_code
+                message.DEFAULT_MESSAGE.response.count = result.length
+                message.DEFAULT_MESSAGE.response.filme = result
+
+                return message.DEFAULT_MESSAGE //200 (dados do filme)
+            }else{
+                return message.ERROR_NOT_FOUND //404
+            }
+        }else{
+            return message.ERROR_INTERNAL_SERVER_MODEL //500 (model)
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
+    }
 }
 
 //Função para buscar um Filme pelo id 
-const buscarFilme = async function(){
+const buscarFilme = async function(id){
+    //criando um clone do objeto JSON para manipular sua estrutura local, sem modificar a estrutura original
+    //realiza uma conversão do json para string e permite clonar a const config_message sem modificar o original
+    let message = JSON.parse(JSON.stringify(config_message))
 
+    try {
+        //Validação par garantir que o id seja válido
+        if(id == "" || id == null || id == undefined || isNaN(id)){
+            message.ERROR_BAD_REQUEST.field = "[ID] INVÁLIDO"
+            return message.ERROR_BAD_REQUEST //400
+            
+        }else{
+            let result = await filmeDAO.selectByIdFilme(id)
+
+            if(result){
+                if(result.length > 0){
+
+                    message.DEFAULT_MESSAGE.status = message.SUCESS_RESPONSE.status
+                    message.DEFAULT_MESSAGE.status_code = message.SUCESS_RESPONSE.status_code
+                    message.DEFAULT_MESSAGE.response.filme = result
+
+                    return message.DEFAULT_MESSAGE //200
+
+                }else{
+                    return message.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return message.ERROR_INTERNAL_SERVER_MODEL //500(model)
+            }
+        }
+    } catch (error) {
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
+    }
 }
 
 //Função para excluir um filme
-const excluirFilme = async function(){
+const excluirFilme = async function(id){
+    let message = JSON.parse(JSON.stringify(config_message))
 
+    try {
+        //Validação par garantir que o id seja válido
+        if(id == "" || id == null || id == undefined || isNaN(id)){
+            message.ERROR_BAD_REQUEST.field = "[ID] INVÁLIDO"
+            return message.ERROR_BAD_REQUEST //400
+            
+        }else{
+            let result = await filmeDAO.deleteFilme(id)
+
+            if(result){
+                    message.DEFAULT_MESSAGE.status = message.SUCESS_RESPONSE.status
+                    message.DEFAULT_MESSAGE.status_code = message.SUCESS_RESPONSE.status_code
+                    message.DEFAULT_MESSAGE.response.filme = result
+
+                    return message.DEFAULT_MESSAGE //200
+            }else{
+                return message.ERROR_INTERNAL_SERVER_MODEL //500(model)
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
+    }
 }
 
 //função para validar todos os dados de filme (obrigatórios, qtde de caracteres, etc)
