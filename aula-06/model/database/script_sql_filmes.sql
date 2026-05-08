@@ -1,35 +1,36 @@
-#Cria o database do projeto de filmes
-create database db_filmes_20261_a;
-
-#Ativa o uso do database do projeto filme
+show databases;
 use db_filmes_20261_a;
-
-#Cria a tbl filme
-create table tbl_filme
-
 show tables;
-
-#Inserir dados
-insert into tbl_filme(
-						nome, 
-						data_lancamento, 
-                        duracao, 
-                        sinopse, 
-                        avaliacao, 
-                        valor, 
-                        capa
-                        )
-values (
-		'Super Mario Galaxy: O Filme', 
-        '2026-04-02', 
-        '01:39:00', 
-        'Uma nova aventura leva Mario a enfrentar um inédito e ameaçador super vilão. 
-        Em Super Mario Galaxy: O Filme, o bigodudo encanador italiano e seus aliados 
-        embarcam numa aventura galáctica repleta de ação e momentos emocionantes 
-        depois de salvar o Reino dos Cogumelos.', 
-        '3', 
-        '50.70', 
-        'https://br.web.img3.acsta.net/c_310_420/img/5b/ea/5bea1aeac3323aeaaf82449a34fafbbf.jpg'
-        );
-        
-      
+select * from tbl_filme;
+create table tbl_diretor (
+	id int primary key not null auto_increment,
+    nome varchar(45),
+    data_nascimento date,
+    data_inicio_carreira date,
+    data_fim_carreira date,
+    data_falescimento date
+);
+create table tbl_ator (
+	id int primary key not null auto_increment,
+    nome varchar(45),
+    data_nascimento date,
+    data_inicio_carreira date,
+    data_fim_carreira date,
+    data_falescimento date
+);
+create table tbl_genero(
+	id int primary key not null auto_increment,
+    nome varchar(45)
+);
+create table tbl_classificacao_indicativa(
+	id int primary key not null auto_increment,
+    classificacao varchar(45)
+);
+create table tbl_atividade(
+	id int primary key not null auto_increment,
+    nome_atividade varchar(45)
+);
+create table tbl_nacionalidade(
+	id int primary key not null auto_increment,
+    nacionalidade varchar(80)
+);

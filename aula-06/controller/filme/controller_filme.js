@@ -141,7 +141,7 @@ const buscarFilme = async function(id){
 
     try {
         //Validação par garantir que o id seja válido
-        if(id == "" || id == null || id == undefined || isNaN(id)){
+        if(id == undefined || id == "" || id == null || isNaN(id)){
             message.ERROR_BAD_REQUEST.field = "[ID] INVÁLIDO"
             return message.ERROR_BAD_REQUEST //400
             
@@ -175,25 +175,20 @@ const excluirFilme = async function(id){
 
     try {
         //Validação par garantir que o id seja válido
-        if(id == "" || id == null || id == undefined || isNaN(id)){
-            message.ERROR_BAD_REQUEST.field = "[ID] INVÁLIDO"
-            return message.ERROR_BAD_REQUEST //400
-            
-        }else{
+        let resultBuscarID = await buscarFilme(id)
+        if(resultBuscarID.status){
+            //chama a função do DAO para deletar o filme
             let result = await filmeDAO.deleteFilme(id)
 
             if(result){
-                    message.DEFAULT_MESSAGE.status = message.SUCESS_RESPONSE.status
-                    message.DEFAULT_MESSAGE.status_code = message.SUCESS_RESPONSE.status_code
-                    message.DEFAULT_MESSAGE.response.filme = result
-
-                    return message.DEFAULT_MESSAGE //200
+                return message.SUCESS_DELETED_ITEM //200 (rgistro excluido)
             }else{
-                return message.ERROR_INTERNAL_SERVER_MODEL //500(model)
+                return message.ERROR_INTERNAL_SERVER_MODEL //500 model
             }
+        }else{
+         return resultBuscarID //400 ou 404
         }
     } catch (error) {
-        console.log(error)
         return message.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
     }
 }
@@ -203,22 +198,22 @@ const validarDados = async function(filme){
 
     let message = JSON.parse(JSON.stringify(config_message))
 
-    if(filme.nome == "" || filme.nome == null || filme.nome == undefined || filme.nome.length > 80){
+    if(filme.nome == undefined || filme.nome == "" || filme.nome == null || filme.nome.length > 80){
         message.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-    }else if(filme.data_lancamento == '' || filme.data_lancamento == null || filme.data_lancamento == undefined || filme.data_lancamento.length !=10){
+    }else if(filme.data_lancamento == undefined || filme.data_lancamento == '' || filme.data_lancamento == null || filme.data_lancamento.length !=10){
         message.ERROR_BAD_REQUEST.field = '[DATA_LANCAMENTO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-    }else if(filme.duracao == "" || filme.duracao == null || filme.duracao == undefined || filme.duracao.length < 5){
+    }else if(filme.duracao == undefined || filme.duracao == "" || filme.duracao == null || filme.duracao.length < 5){
         message.ERROR_BAD_REQUEST.field = '[DURACAO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-    }else if(filme.sinopse == '' || filme.sinopse == null || filme.sinopse == undefined){
+    }else if(filme.sinopse == undefined || filme.sinopse == '' || filme.sinopse == null){
         message.ERROR_BAD_REQUEST.field = '[SINOPSE] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else if(isNaN(filme.avaliacao) || filme.avaliacao.lenght > 3){
         message.ERROR_BAD_REQUEST.field = '[AVALIACAO] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
-    }else if(filme.valor == "" || filme.valor == null || filme.valor == undefined || filme.valor.split('.')[0].length > 3 || isNaN(filme.valor)){
+    }else if(filme.valor == undefined || filme.valor == "" || filme.valor == null || filme.valor.split('.')[0].length > 3 || isNaN(filme.valor)){
         message.ERROR_BAD_REQUEST.field = '[VALOR] INVÁLIDO'
         return message.ERROR_BAD_REQUEST
     }else if(filme.capa.lenght > 255){
