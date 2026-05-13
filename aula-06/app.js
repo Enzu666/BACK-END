@@ -13,6 +13,7 @@ const bodyParser = require('body-parser')
 
 //import das controllers do projeto
 const controllerFilme = require('./controller/filme/controller_filme.js')
+const controllerClassificacao = require('./controller/classificacao_indicativa/controller_classificacao')
 
 //Criando um objeto para manipular dados do body da API em formato json
 const bodyParserJSON = bodyParser.json()
@@ -82,6 +83,55 @@ app.delete('/v1/senai/locadora/filme/:id', async function(request, response){
     response.status(result.status_code)
     response.json(result)
 })
+
+// ENDPOINTS - Classificação Indicativa
+
+app.post('/v1/senai/locadora/classificacao', bodyParserJSON, async function(request, response){
+    let dados = request.body
+    let contentType = request.headers['content-type']
+
+    let result = await controllerClassificacao.inserirClassificacao(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.get('/v1/senai/locadora/classificacao', async function(request, response){
+    let result = await controllerClassificacao.listarClassificacoes()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response){
+    let id = request.params.id
+
+    let result = await controllerClassificacao.buscarClassificacaoPorId(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(request, response){
+    let contentType = request.headers['content-type']
+    let id = request.params.id
+    let dados = request.body
+
+    let result = await controllerClassificacao.atualizarClassificacao(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response){
+    let id = request.params.id
+
+    let result = await controllerClassificacao.excluirClassificacao(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
 //Serve para inicializar a API para receber requisições
 app.listen(8080, function(){
     console.log('API funcionando')
