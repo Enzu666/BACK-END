@@ -6,243 +6,127 @@
  * Versão: 1.0
 *************************************************************************************/
 
-//Import do arquivo de padronização de mensagens
-const  config_message = require('../modulo/configMessages.js')
-//Import do arquivo DAO para fazer o crud do filme no Banco de Dados
-const filmeDAO = require("../../model/DAO/classificacao_indicativa/classificacao_indicativa.js")
+// controller/classificacao_indicativa/controller_classificacao.js
 
-// controller/classificacaoController.js
+const classificacaoDAO = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js')
 
-const classificacaoDAO = require('../../model/DAO/classificacao_indicativa/classificacao_indicativa.js') // ajuste o caminho conforme seu projeto
-
-// POST /classificacao — Inserir nova classificação
-const inserirClassificacao = async function(request, response) {
-    try {
-        const classificacao = request.body
-
-        // Validação
-        const erros = validarClassificacao(classificacao)
-        if (erros.length > 0) {
-            return response.status(400).json({
-                status: 400,
-                message: 'Dados inválidos.',
-                errors: erros
-            })
-        }
-
-        // Chama o DAO para inserir
-        const result = await classificacaoDAO.insertClassificacao(classificacao)
-
-        if (result) {
-            return response.status(201).json({
-                status: 201,
-                message: 'Classificação inserida com sucesso.'
-            })
-        } else {
-            return response.status(500).json({
-                status: 500,
-                message: 'Não foi possível inserir a classificação.'
-            })
-        }
-
-    } catch (error) {
-        return response.status(500).json({
-            status: 500,
-            message: 'Erro interno do servidor.',
-            error: error.message
-        })
-    }
-}
-
-// PUT /classificacao — Atualizar classificação existente
-const atualizarClassificacao = async function(request, response) {
-    try {
-        const classificacao = request.body
-
-        // Valida se o ID foi informado
-        if (!classificacao.id || isNaN(classificacao.id)) {
-            return response.status(400).json({
-                status: 400,
-                message: 'ID inválido ou não informado.'
-            })
-        }
-
-        // Verifica se a classificação existe antes de atualizar
-        const classificacaoExistente = await classificacaoDAO.selectByIdClassificacao(classificacao.id)
-        if (!classificacaoExistente || classificacaoExistente.length === 0) {
-            return response.status(404).json({
-                status: 404,
-                message: 'Classificação não encontrada.'
-            })
-        }
-
-        // Validação dos dados
-        const erros = validarClassificacao(classificacao)
-        if (erros.length > 0) {
-            return response.status(400).json({
-                status: 400,
-                message: 'Dados inválidos.',
-                errors: erros
-            })
-        }
-
-        const result = await classificacaoDAO.updateClassificacao(classificacao)
-
-        if (result) {
-            return response.status(200).json({
-                status: 200,
-                message: 'Classificação atualizada com sucesso.'
-            })
-        } else {
-            return response.status(500).json({
-                status: 500,
-                message: 'Não foi possível atualizar a classificação.'
-            })
-        }
-
-    } catch (error) {
-        return response.status(500).json({
-            status: 500,
-            message: 'Erro interno do servidor.',
-            error: error.message
-        })
-    }
-}
-
-// GET /classificacoes — Listar todas as classificações
-const listarClassificacoes = async function(request, response) {
-    try {
-        const result = await classificacaoDAO.selectAllClassificacao()
-
-        if (result && result.length > 0) {
-            return response.status(200).json({
-                status: 200,
-                message: 'Classificações encontradas.',
-                classificacoes: result,
-                quantidade: result.length
-            })
-        } else {
-            return response.status(404).json({
-                status: 404,
-                message: 'Nenhuma classificação encontrada.'
-            })
-        }
-
-    } catch (error) {
-        return response.status(500).json({
-            status: 500,
-            message: 'Erro interno do servidor.',
-            error: error.message
-        })
-    }
-}
-
-// GET /classificacao/:id — Buscar classificação por ID
-const buscarClassificacaoPorId = async function(request, response) {
-    try {
-        const id = request.params.id
-
-        // Valida o ID
-        if (!id || isNaN(id)) {
-            return response.status(400).json({
-                status: 400,
-                message: 'ID inválido ou não informado.'
-            })
-        }
-
-        const result = await classificacaoDAO.selectByIdClassificacao(id)
-
-        if (result && result.length > 0) {
-            return response.status(200).json({
-                status: 200,
-                message: 'Classificação encontrada.',
-                classificacao: result[0]
-            })
-        } else {
-            return response.status(404).json({
-                status: 404,
-                message: 'Classificação não encontrada.'
-            })
-        }
-
-    } catch (error) {
-        return response.status(500).json({
-            status: 500,
-            message: 'Erro interno do servidor.',
-            error: error.message
-        })
-    }
-}
-
-// DELETE /classificacao/:id — Excluir classificação por ID
-const excluirClassificacao = async function(request, response) {
-    try {
-        const id = request.params.id
-
-        // Valida o ID
-        if (!id || isNaN(id)) {
-            return response.status(400).json({
-                status: 400,
-                message: 'ID inválido ou não informado.'
-            })
-        }
-
-        // Verifica se existe antes de excluir
-        const classificacaoExistente = await classificacaoDAO.selectByIdClassificacao(id)
-        if (!classificacaoExistente || classificacaoExistente.length === 0) {
-            return response.status(404).json({
-                status: 404,
-                message: 'Classificação não encontrada.'
-            })
-        }
-
-        const result = await classificacaoDAO.deleteClassificacao(id)
-
-        if (result) {
-            return response.status(200).json({
-                status: 200,
-                message: 'Classificação excluída com sucesso.'
-            })
-        } else {
-            return response.status(500).json({
-                status: 500,
-                message: 'Não foi possível excluir a classificação.'
-            })
-        }
-
-    } catch (error) {
-        return response.status(500).json({
-            status: 500,
-            message: 'Erro interno do servidor.',
-            error: error.message
-        })
-    }
-}
-
-// Validação dos dados da classificação
-const validarClassificacao = function(classificacao) {
+const validarClassificacao = function(dados) {
     const erros = []
 
-    // Verifica se o campo existe e não está vazio
-    if (!classificacao.classificacao || classificacao.classificacao === '') {
-        erros.push('O campo classificação é obrigatório.')
-    }
+    if (!dados.sigla || dados.sigla.trim() === '')
+        erros.push('O campo sigla é obrigatório.')
+    else if (dados.sigla.trim().length > 45)
+        erros.push('A sigla deve ter no máximo 45 caracteres.')
 
-    // Verifica se é string
-    if (typeof classificacao.classificacao !== 'string') {
-        erros.push('O campo classificação deve ser um texto.')
-    }
+    if (!dados.nome || dados.nome.trim() === '')
+        erros.push('O campo nome é obrigatório.')
+    else if (dados.nome.trim().length > 100)
+        erros.push('O nome deve ter no máximo 100 caracteres.')
 
-    // Verifica tamanho mínimo e máximo (ajuste conforme sua regra de negócio)
-    if (classificacao.classificacao && classificacao.classificacao.trim().length < 2) {
-        erros.push('A classificação deve ter pelo menos 2 caracteres.')
-    }
-
-    if (classificacao.classificacao && classificacao.classificacao.trim().length > 50) {
-        erros.push('A classificação deve ter no máximo 50 caracteres.')
-    }
+    if (dados.descricao && dados.descricao.trim().length > 255)
+        erros.push('A descrição deve ter no máximo 255 caracteres.')
 
     return erros
+}
+
+const inserirClassificacao = async function(dados, contentType) {
+    if (!dados || Object.keys(dados).length === 0) {
+        return { status_code: 400, message: 'Body da requisição está vazio ou ausente.' }
+    }
+
+    if (String(contentType).toLowerCase().includes('application/json') === false) {
+        return { status_code: 415, message: 'Content-Type inválido. Envie application/json.' }
+    }
+
+    const erros = validarClassificacao(dados)
+    if (erros.length > 0) {
+        return { status_code: 400, message: 'Dados inválidos.', errors: erros }
+    }
+
+    const result = await classificacaoDAO.insertClassificacao(dados)
+
+    if (result) {
+        return { status_code: 201, message: 'Classificação inserida com sucesso.' }
+    } else {
+        return { status_code: 500, message: 'Não foi possível inserir a classificação.' }
+    }
+}
+
+const atualizarClassificacao = async function(dados, id, contentType) {
+    if (!dados || Object.keys(dados).length === 0) {
+        return { status_code: 400, message: 'Body da requisição está vazio ou ausente.' }
+    }
+
+    if (String(contentType).toLowerCase().includes('application/json') === false) {
+        return { status_code: 415, message: 'Content-Type inválido. Envie application/json.' }
+    }
+
+    if (!id || isNaN(id)) {
+        return { status_code: 400, message: 'ID inválido ou não informado.' }
+    }
+
+    const classificacaoExistente = await classificacaoDAO.selectByIdClassificacao(id)
+    if (!classificacaoExistente || classificacaoExistente.length === 0) {
+        return { status_code: 404, message: 'Classificação não encontrada.' }
+    }
+
+    const erros = validarClassificacao(dados)
+    if (erros.length > 0) {
+        return { status_code: 400, message: 'Dados inválidos.', errors: erros }
+    }
+
+    dados.id = id
+
+    const result = await classificacaoDAO.updateClassificacao(dados)
+
+    if (result) {
+        return { status_code: 200, message: 'Classificação atualizada com sucesso.' }
+    } else {
+        return { status_code: 500, message: 'Não foi possível atualizar a classificação.' }
+    }
+}
+
+const listarClassificacoes = async function() {
+    const result = await classificacaoDAO.selectAllClassificacao()
+
+    if (result && result.length > 0) {
+        return { status_code: 200, message: 'Classificações encontradas.', quantidade: result.length, classificacoes: result }
+    } else {
+        return { status_code: 404, message: 'Nenhuma classificação encontrada.' }
+    }
+}
+
+const buscarClassificacaoPorId = async function(id) {
+    if (!id || isNaN(id)) {
+        return { status_code: 400, message: 'ID inválido ou não informado.' }
+    }
+
+    const result = await classificacaoDAO.selectByIdClassificacao(id)
+
+    if (result && result.length > 0) {
+        return { status_code: 200, message: 'Classificação encontrada.', classificacao: result[0] }
+    } else {
+        return { status_code: 404, message: 'Classificação não encontrada.' }
+    }
+}
+
+const excluirClassificacao = async function(id) {
+    if (!id || isNaN(id)) {
+        return { status_code: 400, message: 'ID inválido ou não informado.' }
+    }
+
+    const classificacaoExistente = await classificacaoDAO.selectByIdClassificacao(id)
+    if (!classificacaoExistente || classificacaoExistente.length === 0) {
+        return { status_code: 404, message: 'Classificação não encontrada.' }
+    }
+
+    const result = await classificacaoDAO.deleteClassificacao(id)
+
+    if (result) {
+        return { status_code: 200, message: 'Classificação excluída com sucesso.' }
+    } else {
+        return { status_code: 500, message: 'Não foi possível excluir a classificação.' }
+    }
 }
 
 module.exports = {

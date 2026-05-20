@@ -14,36 +14,39 @@ const knexConfig = require('../../database_config_knex/knexFile')
 //Criar a conexão com o BD MySQL
 const knexConex = knex(knexConfig.development)
 //Função par inserir dados na tabela de classificação indicativa 
- const insertClassificacao = async function(classificacao){
+const insertClassificacao = async function(classificacao){
     try {
-            let sql = `insert into tbl_classificacao_indicativa(
-                            classificacao
-                            )
-                    values (
-                            '${classificacao.classificacao}'
-                            );`
-            //Executar o ScriptSQL no banco de dados
-            let result = await knexConex.raw(sql)
+        let sql = `insert into tbl_classificacao_indicativa(
+                        sigla,
+                        descricao,
+                        nome
+                        )
+                values (
+                        '${classificacao.sigla}',
+                        '${classificacao.descricao}',
+                        '${classificacao.nome}'
+                        );`
+        let result = await knexConex.raw(sql)
 
-            if(result)
-                return true
-            else
-                return false
-            
+        if(result)
+            return true
+        else
+            return false
 
     } catch (error) {
+        console.log('ERRO insertClassificacao:', error.message)
         return false
     }
 }
 //Função para atualizar a classificação indicativa existente na tabela
 const updateClassificacao = async function(classificacao){
     try {
-        //script para atualizar os dados no BD
-        let sql =      `update tbl_classificacao_indicativa set
-                                classificacao   = '${classificacao.classificacao}'
-                        where id                = ${classificacao.id};`
+        let sql = `update tbl_classificacao_indicativa set
+                        sigla     = '${classificacao.sigla}',
+                        descricao = '${classificacao.descricao}',
+                        nome      = '${classificacao.nome}'
+                   where id       = ${classificacao.id};`
 
-        //executa o script sql no bd
         let result = await knexConex.raw(sql)
 
         if(result)
@@ -51,9 +54,12 @@ const updateClassificacao = async function(classificacao){
         else
             return false
     } catch (error) {
+        console.log('ERRO updateClassificacao:', error.message)
         return false
     }
 }
+
+
 //Função para retornar todos os dados da tabela de filmes  
 const selectAllClassificacao = async function(){
     try {
